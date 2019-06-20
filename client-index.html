@@ -1,0 +1,19 @@
+
+<h2>Hello</h2>
+
+<button id="factorial">Compute factorial</button>
+<button id="call">Make phone call</button>
+
+<div id="output"></div>
+
+<script src="client-ipc.js"></script>
+<script src="client-app.js"></script>
+
+<script>
+  if(!IS_DEV) {
+    var tag = document.createElement('meta');
+    tag.setAttribute("http-equiv", "Content-Security-Policy");
+    tag.setAttribute("content", "default-src 'self'; style-src 'self' 'unsafe-inline';")
+    document.head.appendChild(tag)
+  }
+</script>
