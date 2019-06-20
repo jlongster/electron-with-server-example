@@ -1,7 +1,7 @@
 let electron = require('electron')
 let { app, BrowserWindow } = require('electron')
 let { fork } = require('child_process')
-let findOpenSocket = require('./findOpenSocket')
+let findOpenSocket = require('./find-open-socket')
 let isDev = require('electron-is-dev')
 
 let clientWin
