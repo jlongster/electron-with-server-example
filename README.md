@@ -96,25 +96,10 @@ However, managing multiple processes is annoying. It's also annoying if you want
 
 We have the devtools in Electron, why don't we just use that? In dev mode, this project [loads the server in a background window](https://github.com/jlongster/electron-with-server-example/blob/ce2905cb9f018a81db83db193dbd7fd24fb77390/index.js#L67-L71) instead of a background process! It's easy to do since we just create a renderer process with node integration enabled, so all of node is still there, but we also get a window!
 
-![](http://jlongster.com/s/upload/ef77cefd-5ba9-47cd-9ddc-0c13af66a9d5.png)
+![](http://jlongster.com/s/upload/10fe1c47-44c1-4f5f-bb27-9b1223dba44d.png)
 
-In production mode, it creates a normal node process in the background. See [this post]() for more cool stuff that running in a window unlocks.
+In production mode, it creates a normal node process in the background.
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Now you can use the fancy console, debugger, and stellar performance
+tools on your backend easily. See [this post]() for more examples of
+the cool stuff you can do with this.
