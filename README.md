@@ -4,6 +4,8 @@
 
 See [this post]() for background. This project demonstrates how to use a background server in an Electron app. It creates a background process, an IPC mechanism to communicate with it, and does it all in the safest way possible.
 
+This is exactly how my product [Actual](https://actualbudget.com/), a personal finance manager, works and this code is almost 100% copy and pasted from it.
+
 You have to know a decent amount about Electron to set up a background process which is why I created this.
 
 Electron has two types of processes: a renderer process which represents a page with UI and a main process which handles all the renderers. It provides an IPC (inter-process communication) channel for sending messages between a main and renderer process, but you *really* want to be careful using it. Electron's IPC is used for anything critical like interacting with menus, coordinating renders, and more. If you block it, you will quickly see performance degradation (I think recent version have mitigated this possibility somewhat).
