@@ -1,5 +1,7 @@
 # electron-with-server-example
 
+![](http://jlongster.com/s/upload/ef77cefd-5ba9-47cd-9ddc-0c13af66a9d5.png)
+
 See [this post]() for background. This project demonstrates how to use a background server in an Electron app. It creates a background process, an IPC mechanism to communicate with it, and does it all in the safest way possible.
 
 You have to know a decent amount about Electron to set up a background process which is why I created this.
