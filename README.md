@@ -2,11 +2,22 @@
 
 ![](http://jlongster.com/s/upload/ef77cefd-5ba9-47cd-9ddc-0c13af66a9d5.png)
 
-See [this post]() for background. This project demonstrates how to use a background server in an Electron app. It creates a background process, an IPC mechanism to communicate with it, and does it all in the safest way possible.
+See [this post](https://jlongster.com/secret-of-good-electron-apps) for background. This project demonstrates how to use a background server in an Electron app. It creates a background process, an IPC mechanism to communicate with it, and does it all in the safest way possible.
 
 This is exactly how my product [Actual](https://actualbudget.com/), a personal finance manager, works and this code is almost 100% copy and pasted from it.
 
 You have to know a decent amount about Electron to set up a background process which is why I created this.
+
+## Running
+
+```
+$ yarn install
+$ yarn start
+```
+
+All `yarn start` does is run `electron .` which starts your electron app for development. Note how the background server runs in a window in development for debugging, but if you packaged it up with something like [`electron-builder`](https://www.electron.build/) it would run as a normal node process in the background.
+
+## How it works
 
 Electron has two types of processes: a renderer process which represents a page with UI and a main process which handles all the renderers. It provides an IPC (inter-process communication) channel for sending messages between a main and renderer process, but you *really* want to be careful using it. Electron's IPC is used for anything critical like interacting with menus, coordinating renders, and more. If you block it, you will quickly see performance degradation (I think recent version have mitigated this possibility somewhat).
 
@@ -103,5 +114,6 @@ We have the devtools in Electron, why don't we just use that? In dev mode, this 
 In production mode, it creates a normal node process in the background.
 
 Now you can use the fancy console, debugger, and stellar performance
-tools on your backend easily. See [this post]() for more examples of
-the cool stuff you can do with this.
+tools on your backend easily. You can even restart the server by simply reloading the window - and the renderer process doesn't even have to restart.
+
+See [this post](https://jlongster.com/secret-of-good-electron-apps) for more examples of the cool stuff you can do with this.
