@@ -8,6 +8,8 @@ This is exactly how my product [Actual](https://actualbudget.com/), a personal f
 
 You have to know a decent amount about Electron to set up a background process which is why I created this.
 
+**Note: running a node process is dangerous.** If the node process gets compromised in any way and you haven't sandboxed your app (available on macOS and Windows), the attacker has full access to the OS. You need to avoid running untrusted JS at all costs if you are going to enable node anywhere in your app. Be careful. This is meant to be used with 100% local apps where even the frontend is pulled from local files, not from a webserver.
+
 ## Running
 
 ```
