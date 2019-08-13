@@ -22,7 +22,7 @@ function createWindow(socketName) {
 
   clientWin.webContents.on('did-finish-load', () => {
     clientWin.webContents.send('set-socket', {
-      name: serverSocket
+      name: socketName
     })
   })
 }
