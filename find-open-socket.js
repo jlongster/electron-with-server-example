@@ -3,6 +3,8 @@ const os = require('os');
 const { join } = require('path');
 const ipc = require('node-ipc');
 
+ipc.config.silent = true;
+
 function isSocketTaken(name, fn) {
   return new Promise((resolve, reject) => {
     ipc.connectTo(name, () => {
