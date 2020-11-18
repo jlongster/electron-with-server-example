@@ -1,22 +1,17 @@
-let serverHandlers = require('./server-handlers')
-let ipc = require('./server-ipc')
+const serverHandlers = require('./server-handlers')
+const ipc = require('./server-ipc')
 
-let isDev, version
+const opts = parseArgs(process.argv)
+const version = opts.get("--appVersion")
+const isDev = opts.get("--isDev")
+console.log("server", version, isDev)
 
-if (process.argv[2] === '--subprocess') {
-  isDev = false
-  version = process.argv[3]
+ipc.init(opts.get("--socketAppspace"), opts.get("--socketId"), serverHandlers)
 
-  let socketName = process.argv[4]
-  ipc.init(socketName, serverHandlers)
-} else {
-  let { ipcRenderer, remote } = require('electron')
-  isDev = true
-  version = remote.app.getVersion()
-
-  ipcRenderer.on('set-socket', (event, { name }) => {
-    ipc.init(name, serverHandlers)
-  })
+function parseArgs(argv) {
+  return argv.reduce((args, arg) => {
+    const match = arg.split("=")
+    args.set(match[0], match[1] || true)
+    return args
+  }, new Map())
 }
-
-console.log(version, isDev)

@@ -1,33 +1,27 @@
-let electron = require('electron')
-let { app, BrowserWindow } = require('electron')
-let { fork } = require('child_process')
-let findOpenSocket = require('./find-open-socket')
-let isDev = require('electron-is-dev')
+const { app, BrowserWindow } = require('electron')
+const { fork } = require('child_process')
+const isDev = require('electron-is-dev')
+const fs = require('fs')
 
 let clientWin
 let serverWin
 let serverProcess
 
-function createWindow(socketName) {
+function createWindow(args) {
   clientWin = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
       nodeIntegration: false,
+      additionalArguments: args,
       preload: __dirname + '/client-preload.js'
     }
   })
 
   clientWin.loadFile('client-index.html')
-
-  clientWin.webContents.on('did-finish-load', () => {
-    clientWin.webContents.send('set-socket', {
-      name: socketName
-    })
-  })
 }
 
-function createBackgroundWindow(socketName) {
+function createBackgroundWindow(args) {
   const win = new BrowserWindow({
     x: 500,
     y: 300,
@@ -35,39 +29,37 @@ function createBackgroundWindow(socketName) {
     height: 500,
     show: true,
     webPreferences: {
-      nodeIntegration: true
+      nodeIntegration: true,
+      additionalArguments: args,
     }
   })
   win.loadURL(`file://${__dirname}/server-dev.html`)
 
-  win.webContents.on('did-finish-load', () => {
-    win.webContents.send('set-socket', { name: socketName })
-  })
-
   serverWin = win
 }
 
-function createBackgroundProcess(socketName) {
-  serverProcess = fork(__dirname + '/server.js', [
-    '--subprocess',
-    app.getVersion(),
-    socketName
-  ])
-
-  serverProcess.on('message', msg => {
-    console.log(msg)
-  })
+function createBackgroundProcess(args) {
+  serverProcess = fork(__dirname + '/server.js', ['--subprocess', ...args])
+  serverProcess.on('message', msg => { console.log("index", msg) })
 }
 
-app.on('ready', async () => {
-  serverSocket = await findOpenSocket()
+const socketAppspace = `myapp.${process.pid}.`
+const socketId = "server"
 
-  createWindow(serverSocket)
+app.on('ready', async () => {
+  const args = [
+    `--appVersion=${app.getVersion()}`,
+    `--socketAppspace=${socketAppspace}`,
+    `--socketId=server`,
+  ]
+  if (isDev) args.push("--isDev")
+
+  createWindow(args)
 
   if (isDev) {
-    createBackgroundWindow(serverSocket)
+    createBackgroundWindow(args)
   } else {
-    createBackgroundProcess(serverSocket)
+    createBackgroundProcess(args)
   }
 })
 
@@ -76,4 +68,7 @@ app.on('before-quit', () => {
     serverProcess.kill()
     serverProcess = null
   }
+  // cleanup: remove socket after use
+  const socketPath = `/tmp/${socketAppspace}${socketId}`
+  fs.unlinkSync(socketPath)
 })

@@ -1,3 +1,5 @@
+console.log("client-app", window.appVersion, window.isDev)
+
 let output = document.querySelector('#output')
 
 document.querySelector('#factorial').addEventListener('click', async () => {

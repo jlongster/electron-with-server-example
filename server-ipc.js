@@ -1,9 +1,13 @@
+const console = require('console')
 const ipc = require('node-ipc')
 
-function init(socketName, handlers) {
-  ipc.config.id = socketName
+function init(socketAppspace, socketId, handlers) {
   ipc.config.silent = true
+  ipc.appspace = socketAppspace
+  console.log("server-ipc:init", socketAppspace, socketId)
 
+  ipc.config.appspace = socketAppspace
+  ipc.config.id = socketId
   ipc.serve(() => {
     ipc.server.on('message', (data, socket) => {
       let msg = JSON.parse(data)
@@ -19,8 +23,7 @@ function init(socketName, handlers) {
             )
           },
           error => {
-            // Up to you how to handle errors, if you want to forward
-            // them, etc
+            // Up to you how to handle errors, forward them, etc
             ipc.server.emit(
               socket,
               'message',
