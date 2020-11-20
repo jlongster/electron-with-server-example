@@ -43,7 +43,7 @@ ipcOn(socketId, {
 
     // Send any messages that were queued while closed
     if (messageQueue.length > 0) {
-      messageQueue.forEach(msg => client.emit('message', msg))
+      messageQueue.forEach(msg => ipcEmit(socketId, 'message', msg))
       messageQueue = []
     }
 
