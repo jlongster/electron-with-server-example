@@ -1,16 +1,15 @@
+// Import from "main world" context
+const { ipcOn, ipcEmit, socketId } = window.myapp
+
 // State
 const replyHandlers = new Map()
 const listeners = new Map()
 let messageQueue = []
-let socketClient = null
+let connected = false
 
 // Functions
-function onOpen(client) {
-  console.log(`client-ipc: connected to ${client.id}!`)
-}
-
-window.ipcConnect(window.socketId, function (client) {
-  client.on('message', data => {
+ipcOn(socketId, {
+  message: (data) => {
     const msg = JSON.parse(data)
 
     if (msg.type === 'error') {
@@ -37,10 +36,10 @@ window.ipcConnect(window.socketId, function (client) {
     } else {
       throw new Error('Unknown message type: ' + JSON.stringify(msg))
     }
-  })
+  },
 
-  client.on('connect', () => {
-    socketClient = client
+  connect: () => {
+    connected = true
 
     // Send any messages that were queued while closed
     if (messageQueue.length > 0) {
@@ -48,20 +47,20 @@ window.ipcConnect(window.socketId, function (client) {
       messageQueue = []
     }
 
-    onOpen(client)
-  })
+    // onOpen(client)
+  },
 
-  client.on('disconnect', () => {
-    socketClient = null
-  })
+  disconnect: () => {
+    connected = false
+  }
 })
 
 function send(name, args) {
   return new Promise((resolve, reject) => {
-    let id = window.uuid.v4()
+    let id = window.myapp.uuid.v4()
     replyHandlers.set(id, { resolve, reject })
-    if (socketClient) {
-      socketClient.emit('message', JSON.stringify({ id, name, args }))
+    if (connected) {
+      ipcEmit(socketId, 'message', JSON.stringify({ id, name, args }))
     } else {
       messageQueue.push(JSON.stringify({ id, name, args }))
     }

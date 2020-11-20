@@ -13,6 +13,7 @@ function createWindow(args) {
     height: 600,
     webPreferences: {
       nodeIntegration: false,
+      contextIsolation: true,
       additionalArguments: args,
       preload: __dirname + '/client-preload.js'
     }
@@ -30,6 +31,7 @@ function createBackgroundWindow(args) {
     show: true,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: false,
       additionalArguments: args,
     }
   })
