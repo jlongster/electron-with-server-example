@@ -1,3 +1,8 @@
+// Import from "main world" context
+const { appVersion, isDev } = window.myapp
+
+console.log("client-app", appVersion, isDev)
+
 let output = document.querySelector('#output')
 
 document.querySelector('#factorial').addEventListener('click', async () => {
