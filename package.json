@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "electron": "^5.0.4",
+    "electron": "^9.4.0",
     "electron-is-dev": "^1.1.0",
     "node-ipc": "^9.1.1",
     "uuid": "^3.3.2"
