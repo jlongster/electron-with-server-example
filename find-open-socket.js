@@ -1,7 +1,7 @@
 const net = require('net');
 const os = require('os');
 const { join } = require('path');
-const ipc = require('node-ipc');
+const ipc = require("@node-ipc/node-ipc").default;
 
 ipc.config.silent = true;
 
